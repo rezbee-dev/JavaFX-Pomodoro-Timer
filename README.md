@@ -1,6 +1,10 @@
 # Java Pomodoro Timer
 
-## Features
+## Preview
+
+![webm](./media/output.gif)
+
+## Planned Features
 
 - Pomodoro clock
   - 25min, 55 min timers
@@ -20,6 +24,7 @@
     - Sound is played
 
 ## References
+- [inspired by cuckoo.team](https://cuckoo.team/)
 - [Getting Started](https://skeoop.github.io/javafx/Getting-Started)
 - [Official Setup Guide](https://openjfx.io/openjfx-docs/#introduction)
 - [Open Source Documentation](https://fxdocs.github.io/docs/html5/#_introduction)
