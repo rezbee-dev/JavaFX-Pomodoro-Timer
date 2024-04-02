@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.text.Font?>
+
+<StackPane fx:id="homeBackground" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: rgb(38, 146, 228);" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.pomodorotimer.controller.HomeController">
+   <children>
+      <AnchorPane fx:id="bubblesContainer" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="350.0">
+         <children>
+            <StackPane fx:id="twoFiveMinContainer" layoutX="167.0" layoutY="69.0" prefHeight="100.0" prefWidth="100.0">
+               <children>
+                  <Circle fx:id="twoFiveMinCircle" fill="DODGERBLUE" radius="50.0" stroke="BLACK" strokeType="INSIDE" style="-fx-fill: rgb(81, 178, 252); -fx-stroke: rgb(210, 234, 252); -fx-stroke-width: 4;" />
+                  <Label fx:id="twoFiveMinCircleLabel" text="25" textFill="WHITE">
+                     <font>
+                        <Font name="Arial" size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </StackPane>
+            <StackPane fx:id="fiveFiveMinContainer" layoutX="40.0" layoutY="140.0" prefHeight="130.0" prefWidth="120.0">
+               <children>
+                  <Circle fx:id="fiveFiveMinCircle" fill="DODGERBLUE" radius="67.0" stroke="BLACK" strokeType="INSIDE" style="-fx-fill: rgb(81, 178, 252); -fx-stroke: rgb(210, 234, 252); -fx-stroke-width: 4;" />
+                  <Label fx:id="fiveFiveMinCircleLabel" text="55" textFill="WHITE">
+                     <font>
+                        <Font name="Arial" size="36.0" />
+                     </font>
+                  </Label>
+               </children>
+            </StackPane>
+            <StackPane fx:id="fiveMinContainer" layoutX="196.0" layoutY="187.0" prefHeight="70.0" prefWidth="73.0">
+               <children>
+                  <Circle fx:id="fiveMinCircle" fill="DODGERBLUE" radius="35.0" stroke="BLACK" strokeType="INSIDE" style="-fx-fill: rgb(81, 178, 252); -fx-stroke: rgb(210, 234, 252); -fx-stroke-width: 4;" />
+                  <Label fx:id="fiveMinCircleLabel" text="5" textFill="WHITE">
+                     <font>
+                        <Font name="Arial" size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </StackPane>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>
