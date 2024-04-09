@@ -1,22 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
-
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <StackPane fx:id="timerContainer" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: rgb(125, 50, 186);">
          <children>
-            <Rectangle fx:id="sandRectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="300.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-fill: rgb(186, 139, 224);" width="600.0" StackPane.alignment="TOP_CENTER" />
+            <Rectangle fx:id="sandRectangle" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="96.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" style="-fx-fill: rgb(186, 139, 224);" width="600.0" StackPane.alignment="TOP_CENTER" />
             <Label fx:id="timerLabel" style="-fx-text-fill: rgb(255, 255, 255);" text="00:00:00">
                <font>
                   <Font name="Arial" size="36.0" />
                </font>
             </Label>
+            <VBox fx:id="timerButtonsContainer" alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="150.0" prefWidth="190.0">
+               <StackPane.margin>
+                  <Insets top="200.0" />
+               </StackPane.margin>
+               <children>
+                  <Label fx:id="timerResumeLabel" text="Resume" textFill="WHITE">
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                     <font>
+                        <Font name="Arial" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="timerBackLabel" text="Back" textFill="WHITE">
+                     <font>
+                        <Font name="Arial" size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets top="10.0" />
+               </padding>
+            </VBox>
          </children>
       </StackPane>
    </children>
