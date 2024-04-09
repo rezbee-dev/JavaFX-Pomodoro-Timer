@@ -4,63 +4,118 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import org.example.pomodorotimer.fx.SceneLoader;
+import org.example.pomodorotimer.fx.Scenes;
 
 import java.time.temporal.ChronoUnit;
 
 // src: https://stackoverflow.com/a/67582559
 public class Timer {
-    private Label timer;
-    private int cycles;
-    private double containerHeight;
-    private Rectangle backgroundSand;
-    private ObjectProperty<java.time.Duration> time;
-    private DoubleProperty height;
+    private Label pomodoroTimeLabel;
+    private int pomodoroTimeInCycles;
+    private Timeline pomodoroTimeAnimation;
+    private ObjectProperty<java.time.Duration> pomodoroTimeProp;
 
-    private Timer(Label timer, int time, Rectangle backgroundSand, double containerHeight) {
-        this.timer = timer;
-        this.time = new SimpleObjectProperty<>(java.time.Duration.ofSeconds(time));
-        this.cycles = (int) this.time.get().getSeconds();
-        this.height = new SimpleDoubleProperty();
-        this.backgroundSand = backgroundSand;
-        this.containerHeight = containerHeight;
-        this.setCountdown();
+    // sand -> rectangle that grows downwards to represent timer ticking down
+    private Rectangle sand;
+    private double sandMaxHeight;
+    private DoubleProperty sandCurrentHeightProp = new SimpleDoubleProperty(0);
+
+    // timer controls
+    private VBox timerButtonsContainer;
+    private Label timerResumeLabel;
+    private Label timerBackLabel;
+
+    private BooleanProperty areTimerControlsVisible = new SimpleBooleanProperty(false);
+
+    private Timer(Label pomodoroTimeLabel, int pomodoroTime, Rectangle sand, double sandMaxHeight, VBox timerButtonsContainer, Label timerResumeLabel, Label timerBackLabel) {
+        this.sand = sand;
+        this.sandMaxHeight = sandMaxHeight;
+
+        this.pomodoroTimeLabel = pomodoroTimeLabel;
+        this.pomodoroTimeLabel.setOnMouseClicked(this::setupOnClickTimer);
+        this.pomodoroTimeLabel.setOnMouseEntered(this::setupLabelDarken);
+        this.pomodoroTimeLabel.setOnMouseExited(this::setupLabelLighten);
+        this.pomodoroTimeProp = new SimpleObjectProperty<>(java.time.Duration.ofSeconds(pomodoroTime));
+        this.pomodoroTimeInCycles = (int) this.pomodoroTimeProp.get().getSeconds();
+        this.pomodoroTimeAnimation = new Timeline(new KeyFrame(Duration.seconds(1), this::setOnPomodoroTimeCycle));
+
+        this.setupPomodoroTimeAnimation();
+
+        this.timerButtonsContainer = timerButtonsContainer;
+        this.timerButtonsContainer.visibleProperty().bind(this.areTimerControlsVisible);
+        this.timerResumeLabel = timerResumeLabel;
+        this.timerResumeLabel.setOnMouseClicked(this::setupOnClickTimer);
+        this.timerResumeLabel.setOnMouseEntered(this::setupLabelDarken);
+        this.timerResumeLabel.setOnMouseExited(this::setupLabelLighten);
+        this.timerBackLabel = timerBackLabel;
+        this.timerBackLabel.setOnMouseClicked(e ->SceneLoader.changeScene(Scenes.HOME, e));
+        this.timerBackLabel.setOnMouseEntered(this::setupLabelDarken);
+        this.timerBackLabel.setOnMouseExited(this::setupLabelLighten);
     }
 
-    public static Timer init(Label timer, int time, Rectangle backgroundSand, double containerHeight){
-        backgroundSand.setHeight(0);
-        return new Timer(timer, time, backgroundSand, containerHeight);
+    private void setupOnClickTimer(MouseEvent e) {
+        this.areTimerControlsVisible.setValue(!this.areTimerControlsVisible.get());
+
+        if(this.areTimerControlsVisible.get()) {
+            this.pomodoroTimeAnimation.pause();
+        } else {
+            this.pomodoroTimeAnimation.play();
+        }
     }
 
-    private void setCountdown() {
-        this.timer.textProperty().bind(this.timeBinding());
-        this.backgroundSand.heightProperty().bind(this.height);
-
-        Timeline countdown = new Timeline(new KeyFrame(Duration.seconds(1), this::duringCountdownChanges));
-        countdown.setCycleCount(this.cycles);
-        countdown.play();
+    private void setupLabelDarken(MouseEvent e) {
+        Label label = (Label) e.getSource();
+        label.setTextFill(Color.web("#4a3757"));
     }
 
-    private StringBinding timeBinding() {
+    private void setupLabelLighten(MouseEvent e) {
+        Label label = (Label) e.getSource();
+        label.setTextFill(Color.WHITE);
+    }
+
+    private void setupPomodoroTimeAnimation() {
+        this.pomodoroTimeLabel.textProperty().bind(this.setupPomodoroTimeLabelBinding());
+        this.sand.heightProperty().bind(this.sandCurrentHeightProp);
+        this.pomodoroTimeAnimation.setCycleCount(this.pomodoroTimeInCycles);
+        this.pomodoroTimeAnimation.play();
+    }
+
+    // Extracted to its own method for readability
+    private StringBinding setupPomodoroTimeLabelBinding() {
         return Bindings.createStringBinding(() ->
                         String.format("%02d:%02d:%02d",
-                                this.time.get().toHours(),
-                                this.time.get().toMinutesPart(),
-                                this.time.get().toSecondsPart()), this.time);
+                                this.pomodoroTimeProp.get().toHours(),
+                                this.pomodoroTimeProp.get().toMinutesPart(),
+                                this.pomodoroTimeProp.get().toSecondsPart()), this.pomodoroTimeProp);
     }
 
-    private void duringCountdownChanges(ActionEvent event){
-        java.time.Duration timeDecrement = this.time.get().minus(1, ChronoUnit.SECONDS);
-        this.time.setValue(timeDecrement);
-        double heightIncrement = this.height.get() + (this.containerHeight/this.cycles);
-        System.out.println("height increment:" + heightIncrement);
-        this.height.setValue(heightIncrement);
+    // Events that occur during each cycle of the pomodoroTimeAnimation
+    private void setOnPomodoroTimeCycle(ActionEvent event){
+        this.pomodoroTimeProp.setValue(this.calculateTimeIncrements());
+        this.sandCurrentHeightProp.setValue(this.calculateHeightIncrements());
+    }
+
+    private java.time.Duration calculateTimeIncrements(){
+        return this.pomodoroTimeProp.get().minus(1, ChronoUnit.SECONDS);
+    }
+
+    private double calculateHeightIncrements() {
+        double heightIncrement = this.sandCurrentHeightProp.get() + (this.sandMaxHeight /this.pomodoroTimeInCycles);
+        System.out.println("height increment:" + heightIncrement); // debug
+        return heightIncrement;
+    }
+
+    // Factory method for setting up Timer (animation logic) and JavaFX controls (Label, Rectangle, etc)
+    public static Timer init(Label timer, int time, Rectangle backgroundSand, double containerHeight, VBox timerButtonsContainer, Label timerResumeLabel, Label timerBackLabel){
+        return new Timer(timer, time, backgroundSand, containerHeight, timerButtonsContainer, timerResumeLabel, timerBackLabel);
     }
 }
