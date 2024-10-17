@@ -4,8 +4,10 @@
 
 ![webm](./media/output.gif)
 
-## Planned Features
+## Installation
+- _pending_
 
+## Planned Features
 - Pomodoro clock
   - 25min, 55 min timers
   - Pause timer

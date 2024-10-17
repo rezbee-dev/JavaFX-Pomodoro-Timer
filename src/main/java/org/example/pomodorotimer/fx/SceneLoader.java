@@ -43,7 +43,6 @@ public class SceneLoader {
         try {
             return FXMLLoader.load(scene.getPath());
         } catch (Exception err) {
-            System.out.println("Error loading FXML file!\n" + err.getMessage());
             Platform.exit();
             return null;
         }
@@ -52,13 +51,12 @@ public class SceneLoader {
     // Loads stage w/ controller
     private static Parent getRoot(Scenes scene, Initializable controller) {
         try {
-            FXMLLoader loader = new FXMLLoader(scene.getPath());
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(scene.getPath());
             loader.setController(controller);
             return loader.load();
-        } catch (Exception err) {
-            System.out.println("Error loading FXML file!\n" + err.getMessage());
-            Platform.exit();
-            return null;
+        } catch (IOException err) {
+            throw new RuntimeException(err);
         }
     }
 }

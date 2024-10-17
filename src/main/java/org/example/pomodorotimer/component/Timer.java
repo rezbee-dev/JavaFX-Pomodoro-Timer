@@ -57,7 +57,7 @@ public class Timer {
         this.timerResumeLabel.setOnMouseEntered(this::setupLabelDarken);
         this.timerResumeLabel.setOnMouseExited(this::setupLabelLighten);
         this.timerBackLabel = timerBackLabel;
-        this.timerBackLabel.setOnMouseClicked(e ->SceneLoader.changeScene(Scenes.HOME, e));
+        this.timerBackLabel.setOnMouseClicked(e -> SceneLoader.changeScene(Scenes.HOME, e));
         this.timerBackLabel.setOnMouseEntered(this::setupLabelDarken);
         this.timerBackLabel.setOnMouseExited(this::setupLabelLighten);
     }
@@ -110,7 +110,7 @@ public class Timer {
 
     private double calculateHeightIncrements() {
         double heightIncrement = this.sandCurrentHeightProp.get() + (this.sandMaxHeight /this.pomodoroTimeInCycles);
-        System.out.println("height increment:" + heightIncrement); // debug
+//        System.out.println("height increment:" + heightIncrement); // debug
         return heightIncrement;
     }
 

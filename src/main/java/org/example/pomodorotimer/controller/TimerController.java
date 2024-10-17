@@ -7,8 +7,6 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Rectangle;
 import org.example.pomodorotimer.component.Timer;
-import org.example.pomodorotimer.fx.SceneLoader;
-import org.example.pomodorotimer.fx.Scenes;
 
 import java.net.URL;
 import java.util.ResourceBundle;
