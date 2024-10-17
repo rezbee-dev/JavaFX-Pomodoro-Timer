@@ -1,0 +1,42 @@
+# src: https://github.com/gluonhq/hello-gluon-ci/blob/master/.github/workflows/windows.yml
+
+name: Windows-Release
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Add msbuild to PATH
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Visual Studio shell
+        uses: egor-tensin/vs-shell@v2
+
+      - name: Setup Gluon's GraalVM
+        uses: gluonhq/setup-graalvm@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Make staging directory
+        run: mkdir staging
+
+      - name: Gluon Build and Package
+        shell: cmd
+        run: .\mvnw -Pdesktop gluonfx:build gluonfx:package
+
+      - name: Copy native bundles to staging
+        run: |
+          cp -r target/gluonfx/x86_64-windows/PomodoroTimer.exe staging
+          cp -r target/gluonfx/x86_64-windows/PomodoroTimer-1.0.msi staging
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: Package
+          path: staging
