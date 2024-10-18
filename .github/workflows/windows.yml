@@ -40,3 +40,10 @@ jobs:
         with:
           name: Package
           path: staging
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: staging/PomodoroTimer.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
